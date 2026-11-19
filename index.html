@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#6b3fb6">
+  <meta name="description" content="Carga de DNI y lectura de informes PDF para consultas de laboratorio HIGA.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <title>HIGA Resultados</title>
+</head>
+<body>
+<header>
+  <div class="brand">HIGA Resultados</div>
+  <div class="sub">Consulta y organización de informes</div>
+</header>
+
+<main>
+  <section class="card">
+    <h1>1. Cargar DNI</h1>
+    <p>Podés seleccionar un CSV, una planilla compatible o sacar una foto de una lista.</p>
+    <div class="actions">
+      <label class="button primary">📄 Cargar CSV
+        <input id="csvInput" type="file" accept=".csv,text/csv" hidden>
+      </label>
+      <label class="button">📷 Foto de planilla
+        <input id="imageInput" type="file" accept="image/*" capture="environment" hidden>
+      </label>
+    </div>
+    <div id="ocrStatus" class="status"></div>
+    <textarea id="dniInput" rows="6" placeholder="Pegá los DNI, uno por línea"></textarea>
+    <div class="row">
+      <button id="normalizeBtn" class="button primary">Preparar DNI</button>
+      <span id="dniCount" class="badge">0 DNI</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>2. Consultar HIGA</h2>
+    <p>La PWA no puede leer directamente una página institucional de otro dominio. Este botón abre el sistema para que trabajes con tu propia sesión.</p>
+    <a class="button primary full" href="http://higamdp.ddns.net:8070/intranet/higa/index.php?action=laboratorio&subaction=consulta-resultados" target="_blank" rel="noopener">Abrir consulta HIGA</a>
+    <div class="note">Tus credenciales nunca se guardan en esta aplicación.</div>
+  </section>
+
+  <section class="card">
+    <h2>3. Cargar los PDF generados por HIGA</h2>
+    <p>Podés seleccionar uno o varios PDF. La aplicación extrae los valores visibles y arma una tabla.</p>
+    <label class="button primary full">📑 Cargar PDF
+      <input id="pdfInput" type="file" accept="application/pdf,.pdf" multiple hidden>
+    </label>
+    <div id="pdfStatus" class="status"></div>
+  </section>
+
+  <section class="card">
+    <h2>Resultados</h2>
+    <div class="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th>DNI</th><th>Fecha</th><th>HIV-ELISA</th><th>Carga viral</th>
+            <th>CD4 %</th><th>CD4 abs.</th><th>CD8 %</th><th>CD8 abs.</th><th>CD4/CD8</th>
+          </tr>
+        </thead>
+        <tbody id="resultsBody"></tbody>
+      </table>
+    </div>
+    <div class="actions">
+      <button id="csvExport" class="button primary">⬇️ Exportar CSV</button>
+      <button id="clearBtn" class="button danger">Borrar datos</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Estado</h2>
+    <div id="log" class="log">Listo.</div>
+  </section>
+</main>
+
+<footer>HIGA Resultados · procesamiento en el dispositivo</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs" type="module"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.3/papaparse.min.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
